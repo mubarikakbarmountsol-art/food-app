@@ -61,25 +61,11 @@ const orderSubItems = [
     icon: Package,
   },
   {
-    id: "out-for-delivery-orders",
-    label: "Out For Delivery",
-    count: 7,
-    color: "text-purple-600",
-    icon: Truck,
-  },
-  {
     id: "delivered-orders",
     label: "Delivered",
     count: 30,
     color: "text-green-600",
     icon: CheckCircle,
-  },
-  {
-    id: "returned-orders",
-    label: "Returned",
-    count: 2,
-    color: "text-gray-600",
-    icon: RotateCcw,
   },
   {
     id: "failed-to-deliver-orders",
@@ -95,19 +81,11 @@ const orderSubItems = [
     color: "text-red-600",
     icon: XCircle,
   },
-  {
-    id: "scheduled-orders",
-    label: "Scheduled",
-    count: 0,
-    color: "text-indigo-600",
-    icon: Calendar,
-  },
 ];
 
 const deliverymanSubItems = [
   { id: "delivery-man-list", label: "Delivery Man List", count: 14 },
   { id: "add-new-delivery-man", label: "Add New Delivery Man" },
-  { id: "new-joining-request", label: "New Joining Request", count: 3 },
   { id: "delivery-man-reviews", label: "Delivery Man Reviews" },
 ];
 
@@ -128,8 +106,8 @@ export default function Sidebar({
   onSectionChange,
   userRole,
 }: SidebarProps) {
-  const [isOrdersExpanded, setIsOrdersExpanded] = useState(true);
-  const [isDeliverymanExpanded, setIsDeliverymanExpanded] = useState(true);
+  const [isOrdersExpanded, setIsOrdersExpanded] = useState(false);
+  const [isDeliverymanExpanded, setIsDeliverymanExpanded] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const handleOrdersToggle = () => {
@@ -151,30 +129,24 @@ export default function Sidebar({
 
   // Define menu items based on user role
   const getMenuItems = () => {
-    const commonItems = [
+    // Dashboard and POS always at the top
+    const topItems = [
       { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
       { id: "pos", label: "POS", icon: Store },
     ];
 
-    const adminOnlyItems = [
-      { id: "customer", label: "Customer", icon: Users },
-      { id: "customer-wallet", label: "Customer Wallet", icon: CreditCard },
-      { id: "loyalty", label: "Customer Loyalty Point", icon: UserCheck },
-      { id: "subscribed", label: "Subscribed Emails", icon: Mail },
-      { id: "chat", label: "Chat", icon: MessageSquare, badge: "NEW" },
-    ];
-
-    const vendorItems = [
+    const commonItems = [
       { id: "food", label: "Food", icon: Utensils },
-      { id: "banner", label: "Banner", icon: FileText },
       { id: "coupon", label: "Coupon", icon: Gift },
       { id: "notification", label: "Send Notification", icon: Bell },
     ];
 
+    const adminOnlyItems = [];
+
     if (userRole === "admin") {
-      return [...commonItems, ...vendorItems, ...adminOnlyItems];
+      return [...topItems, ...commonItems, ...adminOnlyItems];
     } else {
-      return [...commonItems, ...vendorItems];
+      return [...topItems, ...commonItems];
     }
   };
   return (
@@ -223,6 +195,30 @@ export default function Sidebar({
 
         <nav className="p-4">
           <ul className="space-y-1">
+            {/* Dashboard and POS at the top */}
+            {getMenuItems()
+              .slice(0, 2)
+              .map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => handleSectionChange(item.id)}
+                    className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      activeSection === item.id
+                        ? "bg-red-50 text-red-700 border-r-2 border-red-500 shadow-sm"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
+                    <span className="flex-1 text-left">{item.label}</span>
+                    {item.badge && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              ))}
+
             {/* Orders Dropdown */}
             <li>
               <button
@@ -275,45 +271,29 @@ export default function Sidebar({
               )}
             </li>
 
-            {/* Table Order */}
-            <li>
-              <button
-                onClick={() => handleSectionChange("table-order")}
-                className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  activeSection === "table-order"
-                    ? "bg-red-50 text-red-700 border-r-2 border-red-500 shadow-sm"
-                    : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                }`}
-              >
-                <Ticket className="w-4 h-4 mr-3 flex-shrink-0" />
-                <span className="flex-1 text-left">Table Order</span>
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                  Addon
-                </span>
-              </button>
-            </li>
-
-            {/* Rest of menu items */}
-            {getMenuItems().map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => handleSectionChange(item.id)}
-                  className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeSection === item.id
-                      ? "bg-red-50 text-red-700 border-r-2 border-red-500 shadow-sm"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                  }`}
-                >
-                  <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              </li>
-            ))}
+            {/* Rest of menu items (excluding Dashboard and POS) */}
+            {getMenuItems()
+              .slice(2)
+              .map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => handleSectionChange(item.id)}
+                    className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      activeSection === item.id
+                        ? "bg-red-50 text-red-700 border-r-2 border-red-500 shadow-sm"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
+                    <span className="flex-1 text-left">{item.label}</span>
+                    {item.badge && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              ))}
 
             {/* Deliveryman Dropdown - Admin Only */}
             {userRole === "admin" && (
