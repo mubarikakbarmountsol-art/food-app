@@ -112,10 +112,16 @@ export default function Sidebar({
 
   const handleOrdersToggle = () => {
     setIsOrdersExpanded(!isOrdersExpanded);
+    if (!isOrdersExpanded) {
+      setIsDeliverymanExpanded(false);
+    }
   };
 
   const handleDeliverymanToggle = () => {
     setIsDeliverymanExpanded(!isDeliverymanExpanded);
+    if (!isDeliverymanExpanded) {
+      setIsOrdersExpanded(false);
+    }
   };
 
   const handleMobileToggle = () => {
@@ -138,7 +144,6 @@ export default function Sidebar({
     const commonItems = [
       { id: "food", label: "Food", icon: Utensils },
       { id: "coupon", label: "Coupon", icon: Gift },
-      { id: "notification", label: "Send Notification", icon: Bell },
     ];
 
     const adminOnlyItems = [];
