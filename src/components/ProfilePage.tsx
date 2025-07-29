@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
-import { User, Mail, Phone, MapPin, Calendar, Edit, Save, X, Camera } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Edit,
+  Save,
+  X,
+  Camera,
+} from "lucide-react";
 
 interface ProfilePageProps {
   onBack: () => void;
@@ -8,14 +18,14 @@ interface ProfilePageProps {
 export default function ProfilePage({ onBack }: ProfilePageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'admin@efood.com',
-    phone: '+1 (555) 123-4567',
-    address: '123 Main Street, City, State 12345',
-    joinDate: '2024-01-15',
-    role: 'Super Admin',
-    department: 'Management'
+    firstName: "John",
+    lastName: "Doe",
+    email: "admin@grocyon.com",
+    phone: "+1 (555) 123-4567",
+    address: "123 Main Street, City, State 12345",
+    joinDate: "2024-01-15",
+    role: "Super Admin",
+    department: "Management",
   });
 
   const handleSave = () => {
@@ -24,7 +34,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
+    setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -39,14 +49,20 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
             >
               <X className="w-6 h-6" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-800">Profile Settings</h1>
+            <h1 className="text-2xl font-bold text-gray-800">
+              Profile Settings
+            </h1>
           </div>
           <button
-            onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+            onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
             className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors flex items-center space-x-2"
           >
-            {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
-            <span>{isEditing ? 'Save Changes' : 'Edit Profile'}</span>
+            {isEditing ? (
+              <Save className="w-4 h-4" />
+            ) : (
+              <Edit className="w-4 h-4" />
+            )}
+            <span>{isEditing ? "Save Changes" : "Edit Profile"}</span>
           </button>
         </div>
       </div>
@@ -76,7 +92,9 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
             <div className="mt-6 space-y-4">
               <div className="flex items-center space-x-3 text-sm text-gray-600">
                 <Calendar className="w-4 h-4" />
-                <span>Joined {new Date(profileData.joinDate).toLocaleDateString()}</span>
+                <span>
+                  Joined {new Date(profileData.joinDate).toLocaleDateString()}
+                </span>
               </div>
               <div className="flex items-center space-x-3 text-sm text-gray-600">
                 <Mail className="w-4 h-4" />
@@ -93,8 +111,10 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
         {/* Profile Information */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-6">Personal Information</h3>
-            
+            <h3 className="text-lg font-semibold text-gray-800 mb-6">
+              Personal Information
+            </h3>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -104,7 +124,9 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   <input
                     type="text"
                     value={profileData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("firstName", e.target.value)
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 ) : (
@@ -120,7 +142,9 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   <input
                     type="text"
                     value={profileData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("lastName", e.target.value)
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 ) : (
@@ -136,7 +160,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   <input
                     type="email"
                     value={profileData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 ) : (
@@ -152,7 +176,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   <input
                     type="tel"
                     value={profileData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 ) : (
@@ -167,7 +191,9 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                 {isEditing ? (
                   <textarea
                     value={profileData.address}
-                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("address", e.target.value)
+                    }
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
@@ -213,7 +239,9 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
 
       {/* Security Settings */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-6">Security Settings</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-6">
+          Security Settings
+        </h3>
         <div className="space-y-4">
           <button className="w-full md:w-auto bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
             Change Password

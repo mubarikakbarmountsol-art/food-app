@@ -35,6 +35,7 @@ interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
   userRole: "admin" | "vendor";
+  onVendorsClick?: () => void;
 }
 
 const orderSubItems = [
@@ -105,6 +106,7 @@ export default function Sidebar({
   activeSection,
   onSectionChange,
   userRole,
+  onVendorsClick,
 }: SidebarProps) {
   const [isOrdersExpanded, setIsOrdersExpanded] = useState(false);
   const [isDeliverymanExpanded, setIsDeliverymanExpanded] = useState(false);
@@ -146,7 +148,7 @@ export default function Sidebar({
       { id: "coupon", label: "Coupon", icon: Gift },
     ];
 
-    const adminOnlyItems = [];
+    const adminOnlyItems = [{ id: "vendors", label: "Vendors", icon: Users }];
 
     if (userRole === "admin") {
       return [...topItems, ...commonItems, ...adminOnlyItems];
@@ -186,11 +188,21 @@ export default function Sidebar({
       >
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+            <img
+              src="/image/logo/logo_icon.jpeg"
+              alt="grocyon Logo"
+              className="w-8 h-8 rounded-full object-cover"
+              onError={(e) => {
+                // Fallback to icon if image fails to load
+                e.currentTarget.style.display = "none";
+                e.currentTarget.nextElementSibling?.classList.remove("hidden");
+              }}
+            />
+            <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hidden">
               <Utensils className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="text-xl font-bold text-gray-800">eFood</span>
+              <span className="text-xl font-bold text-gray-800">Grocyon</span>
               <div className="text-xs text-gray-500 capitalize">
                 {userRole} Panel
               </div>
@@ -282,7 +294,9 @@ export default function Sidebar({
               .map((item) => (
                 <li key={item.id}>
                   <button
-                    onClick={() => handleSectionChange(item.id)}
+                    onClick={() => {
+                      handleSectionChange(item.id);
+                    }}
                     className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                       activeSection === item.id
                         ? "bg-red-50 text-red-700 border-r-2 border-red-500 shadow-sm"
