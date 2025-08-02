@@ -136,24 +136,37 @@ export default function Sidebar({
   };
 
   // Define menu items based on user role
-  const getMenuItems = () => {
+  type MenuItem = {
+    id: string;
+    label: string;
+    icon: React.ElementType;
+    badge?: string;
+  };
+
+  const getMenuItems = (): MenuItem[] => {
     // Dashboard and POS always at the top
-    const topItems = [
+    const topItems: MenuItem[] = [
       { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
       { id: "pos", label: "POS", icon: Store },
     ];
 
-    const commonItems = [
+    const commonItems: MenuItem[] = [
       { id: "food", label: "Food", icon: Utensils },
       { id: "coupon", label: "Coupon", icon: Gift },
     ];
 
-    const adminOnlyItems = [{ id: "vendors", label: "Vendors", icon: Users }];
+    const adminOnlyItems: MenuItem[] = [
+      { id: "vendors", label: "Vendors", icon: Users },
+    ];
+
+    const vendorOnlyItems: MenuItem[] = [
+      { id: "categories", label: "Categories", icon: Package },
+    ];
 
     if (userRole === "admin") {
       return [...topItems, ...commonItems, ...adminOnlyItems];
     } else {
-      return [...topItems, ...commonItems];
+      return [...topItems, ...commonItems, ...vendorOnlyItems];
     }
   };
   return (

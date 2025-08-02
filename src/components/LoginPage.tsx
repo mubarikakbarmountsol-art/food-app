@@ -3,59 +3,51 @@ import { Eye, EyeOff, Mail, Lock, Utensils } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: () => void;
-  onSwitchToSignup: () => void;
   onRoleSelect: (role: "admin" | "vendor") => void;
+  onForgotPassword: () => void;
 }
 
-// Static credentials
 const CREDENTIALS = {
   admin: {
-    email: "admin@grocyon.com",
+    email: "admin@efood.com",
     password: "admin123",
   },
   vendor: {
-    email: "vendor@grocyon.com",
+    email: "vendor@efood.com",
     password: "vendor123",
   },
 };
 
 export default function LoginPage({
   onLogin,
-  onSwitchToSignup,
   onRoleSelect,
+  onForgotPassword,
 }: LoginPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<"admin" | "vendor">("admin");
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    // Validate credentials based on selected role
-    const validCredentials = CREDENTIALS[selectedRole];
-
     if (
-      email === validCredentials.email &&
-      password === validCredentials.password
+      email === CREDENTIALS.admin.email &&
+      password === CREDENTIALS.admin.password
     ) {
-      onRoleSelect(selectedRole);
+      onRoleSelect("admin");
+      onLogin();
+    } else if (
+      email === CREDENTIALS.vendor.email &&
+      password === CREDENTIALS.vendor.password
+    ) {
+      onRoleSelect("vendor");
       onLogin();
     } else {
       setError("Invalid email or password. Please check your credentials.");
     }
-  };
-
-  const handleRoleChange = (role: "admin" | "vendor") => {
-    setSelectedRole(role);
-    setError("");
-    // Auto-fill credentials for demo
-    const credentials = CREDENTIALS[role];
-    setEmail(credentials.email);
-    setPassword(credentials.password);
   };
 
   return (
@@ -93,96 +85,36 @@ export default function LoginPage({
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* Right side (login form) */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="max-w-md w-full">
-          {/* Mobile Logo */}
+          {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
                 <Utensils className="w-7 h-7 text-white" />
               </div>
-              <span className="text-3xl font-bold text-gray-800">grocyon</span>
+              <span className="text-3xl font-bold text-gray-800">eFood</span>
             </div>
           </div>
 
           {/* Header */}
-          <div className="text-center lg:text-right mb-8">
+          <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Sign In</h2>
-            <p className="text-gray-600 mb-4">Welcome Back</p>
-            <div className="text-sm text-gray-500">
-              Want To Login Your Admin?
-              <button
-                onClick={() => handleRoleChange("admin")}
-                className={`ml-1 font-medium ${
-                  selectedRole === "admin"
-                    ? "text-red-600"
-                    : "text-blue-600 hover:text-blue-700"
-                }`}
-              >
-                Admin Login
-              </button>
-              <span className="mx-2">|</span>
-              <button
-                onClick={() => handleRoleChange("vendor")}
-                className={`font-medium ${
-                  selectedRole === "vendor"
-                    ? "text-red-600"
-                    : "text-blue-600 hover:text-blue-700"
-                }`}
-              >
-                Vendor Login
-              </button>
-            </div>
+            <p className="text-sm text-gray-500">
+              Enter your email and password to login
+            </p>
           </div>
 
-          {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Role Selection */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Login As
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => handleRoleChange("admin")}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    selectedRole === "admin"
-                      ? "border-red-500 bg-red-50 text-red-700"
-                      : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
-                  }`}
-                >
-                  <div className="text-center">
-                    <div className="text-lg font-semibold">Admin</div>
-                    <div className="text-xs">Full Access</div>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleRoleChange("vendor")}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    selectedRole === "vendor"
-                      ? "border-red-500 bg-red-50 text-red-700"
-                      : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
-                  }`}
-                >
-                  <div className="text-center">
-                    <div className="text-lg font-semibold">Vendor</div>
-                    <div className="text-xs">Restaurant Owner</div>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {/* Error Message */}
+            {/* Error message */}
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
-            {/* Email Field */}
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Your Email
@@ -200,7 +132,7 @@ export default function LoginPage({
               </div>
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
@@ -227,6 +159,17 @@ export default function LoginPage({
                   )}
                 </button>
               </div>
+
+              {/* Forgot password link */}
+              <div className="text-right mt-2">
+                <button
+                  type="button"
+                  onClick={onForgotPassword}
+                  className="text-sm text-red-600 hover:text-red-700"
+                >
+                  Forgot password?
+                </button>
+              </div>
             </div>
 
             {/* Remember Me */}
@@ -240,7 +183,7 @@ export default function LoginPage({
               <span className="ml-2 text-sm text-gray-600">Remember Me</span>
             </div>
 
-            {/* Login Button */}
+            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-lg"
@@ -248,34 +191,6 @@ export default function LoginPage({
               Sign in
             </button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
-              Demo Credentials:
-            </h4>
-            <div className="text-xs text-gray-600 space-y-1">
-              <div>
-                <strong>Admin:</strong> admin@grocyon.com / admin123
-              </div>
-              <div>
-                <strong>Vendor:</strong> vendor@grocyon.com / vendor123
-              </div>
-            </div>
-          </div>
-
-          {/* Sign Up Link */}
-          <div className="mt-6 text-center">
-            <span className="text-sm text-gray-600">
-              Don't have an account?{" "}
-            </span>
-            <button
-              onClick={onSwitchToSignup}
-              className="text-sm text-red-600 hover:text-red-700 font-medium"
-            >
-              Sign up
-            </button>
-          </div>
         </div>
       </div>
     </div>

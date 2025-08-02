@@ -22,6 +22,7 @@ import RecentOrders from './components/RecentOrders';
 import VendorDashboard from './components/VendorDashboard';
 import VendorsPage from './components/VendorsPage';
 import AddVendorPage from './components/AddVendorPage';
+import CategoriesPage from './components/CategoriesPage';
 import { 
   Clock, 
   CheckCircle, 
@@ -309,6 +310,9 @@ function App() {
 
       case 'food':
         return <FoodPage />;
+
+      case 'categories':
+        return <CategoriesPage />;
 
       case 'customer':
         return <CustomerPage />;
