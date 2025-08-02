@@ -398,7 +398,7 @@ export default function VendorsPage({ onAddVendor }: VendorsPageProps) {
                 <button className="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium">
                   Edit Vendor
                 </button>
-                <button className="flex-1 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors font-medium">
+                <button className="flex-1 hidden bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors font-medium">
                   View Orders
                 </button>
                 <button
