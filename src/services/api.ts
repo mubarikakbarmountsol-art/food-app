@@ -59,78 +59,64 @@ export interface ForgotPasswordResponse {
 
 class ApiService {
   private async makeRequest<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-    
-    const defaultHeaders: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const url = `${API_BASE_URL}${endpoint}`;
 
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      defaultHeaders['Authorization'] = `Bearer ${token}`;
-    }
+  const defaultHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          ...defaultHeaders,
-          ...options.headers,
-        },
-      });
-
-      // Try to parse response as JSON first
-      let responseData: any;
-      const contentType = response.headers.get('content-type');
-      
-      if (contentType && contentType.includes('application/json')) {
-        try {
-          responseData = await response.json();
-        } catch (jsonError) {
-          // If JSON parsing fails, create a generic response
-          responseData = {
-            success: response.ok,
-            message: response.ok ? 'Request successful' : `HTTP ${response.status}: ${response.statusText}`,
-          };
-        }
-      } else {
-        // If not JSON, try to get text response
-        try {
-          const textResponse = await response.text();
-          responseData = {
-            success: response.ok,
-            message: textResponse || (response.ok ? 'Request successful' : `HTTP ${response.status}: ${response.statusText}`),
-          };
-        } catch (textError) {
-          responseData = {
-            success: response.ok,
-            message: response.ok ? 'Request successful' : `HTTP ${response.status}: ${response.statusText}`,
-          };
-        }
-      }
-
-      // If response is not ok, throw an error with the message from the response
-      if (!response.ok) {
-        const errorMessage = responseData.message || responseData.error || `HTTP ${response.status}: ${response.statusText}`;
-        throw new Error(errorMessage);
-      }
-
-      return responseData;
-    } catch (error) {
-      console.error('API request failed:', error);
-      
-      // If it's a network error or fetch failed
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Network error: Unable to connect to server. Please check your internet connection.');
-      }
-      
-      throw error;
-    }
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    defaultHeaders['Authorization'] = `Bearer ${token}`;
   }
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...defaultHeaders,
+        ...options.headers,
+      },
+    });
+
+    const contentType = response.headers.get('content-type');
+    let responseData: any;
+
+    if (contentType?.includes('application/json')) {
+      responseData = await response.json();
+    } else {
+      const text = await response.text();
+      responseData = { message: text };
+    }
+
+    // ✅ Return responseData on success
+    if (response.ok) {
+      return responseData;
+    }
+
+    // ❌ Extract errorMessage from backend response
+    const errorMessage =
+      responseData.errorMessage || responseData.message || 'Request failed';
+    throw new Error(errorMessage);
+  } catch (error: any) {
+    // ✅ Only show this if it's a real fetch/network failure
+    if (
+      error instanceof TypeError &&
+      error.message.includes('Failed to fetch')
+    ) {
+      throw new Error(
+        'Network error: Unable to connect to server. Please check your internet connection.'
+      );
+    }
+
+    throw error;
+  }
+}
+
 
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     return this.makeRequest<LoginResponse>('/auth/login', {
