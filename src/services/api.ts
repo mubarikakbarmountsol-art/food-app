@@ -103,7 +103,6 @@ export interface CategoryResponse {
 export interface UpdateCategoryRequest extends CreateUpdateCategoryRequest {
   id: number;
 }
-class ApiService {
 export interface Item {
   id: number;
   itemName: string;
@@ -143,6 +142,7 @@ export interface UpdateItemRequest extends CreateUpdateItemRequest {
   id: number;
 }
   private async makeRequest<T>(
+class ApiService {
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
