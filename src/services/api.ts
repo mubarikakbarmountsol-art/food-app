@@ -104,6 +104,44 @@ export interface UpdateCategoryRequest extends CreateUpdateCategoryRequest {
   id: number;
 }
 class ApiService {
+export interface Item {
+  id: number;
+  itemName: string;
+  shortDescription: string;
+  longDescription: string;
+  backgroundImageUrl: string;
+  coverImageUrl: string;
+  categoryIds: number[];
+  createdAt?: string;
+  updatedAt?: string;
+  vendorId?: number;
+}
+
+export interface CreateUpdateItemRequest {
+  id?: number;
+  itemName: string;
+  shortDescription: string;
+  longDescription: string;
+  backgroundImageUrl: string;
+  coverImageUrl: string;
+  categoryIds: number[];
+}
+
+export interface ItemsResponse {
+  errorCode: number;
+  errorMessage: string | null;
+  data: Item[] | null;
+}
+
+export interface ItemResponse {
+  errorCode: number;
+  errorMessage: string | null;
+  data: Item | null;
+}
+
+export interface UpdateItemRequest extends CreateUpdateItemRequest {
+  id: number;
+}
   private async makeRequest<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -262,6 +300,41 @@ class ApiService {
     }
 
     return response.json();
+  }
+
+  // Item APIs
+  async getAllItems(): Promise<ItemsResponse> {
+    return this.makeRequest<ItemsResponse>('/item/getAll', {
+      method: 'GET',
+    });
+  }
+
+  async createUpdateItem(data: CreateUpdateItemRequest): Promise<ItemResponse> {
+    console.log('Creating/Updating item with data:', data);
+    return this.makeRequest<ItemResponse>('/item/createUpdateItem', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateItem(data: UpdateItemRequest): Promise<ItemResponse> {
+    console.log('Updating item with data:', data);
+    return this.makeRequest<ItemResponse>('/item/createUpdateItem', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteItem(itemId: number): Promise<{ success: boolean; message: string }> {
+    return this.makeRequest<{ success: boolean; message: string }>(`/item/delete/${itemId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getItemById(id: number): Promise<ItemResponse> {
+    return this.makeRequest<ItemResponse>(`/item/getById/${id}`, {
+      method: 'GET',
+    });
   }
 }
 
