@@ -141,8 +141,9 @@ export interface ItemResponse {
 export interface UpdateItemRequest extends CreateUpdateItemRequest {
   id: number;
 }
-  private async makeRequest<T>(
+
 class ApiService {
+  private async makeRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
