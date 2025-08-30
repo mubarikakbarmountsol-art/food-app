@@ -1,4 +1,4 @@
-const API_BASE_URL = ' https://groceryapp-production-d3fc.up.railway.app/api';
+const API_BASE_URL = 'https://groceryapp-production-d3fc.up.railway.app/api';
 
 export interface LoginRequest {
   identifier: string;
@@ -103,6 +103,48 @@ export interface CategoryResponse {
 export interface UpdateCategoryRequest extends CreateUpdateCategoryRequest {
   id: number;
 }
+export interface Item {
+  id: number;
+  itemName: string;
+  shortDescription: string;
+  longDescription: string;
+  backgroundImageUrl: string;
+  coverImageUrl: string;
+  categoryIds: number[];
+  createdAt?: string;
+  updatedAt?: string;
+  vendorId?: number;
+}
+
+export interface CreateUpdateItemRequest {
+  id?: number;
+  itemName: string;
+  shortDescription: string;
+  longDescription: string;
+  backgroundImageUrl: string;
+  coverImageUrl: string;
+  categoryIds: number[];
+}
+
+export interface ItemsResponse {
+  errorCode: number;
+  errorMessage: string | null;
+  data: {
+    items: Item[];
+    message?: string;
+  } | null;
+}
+
+export interface ItemResponse {
+  errorCode: number;
+  errorMessage: string | null;
+  data: Item | null;
+}
+
+export interface UpdateItemRequest extends CreateUpdateItemRequest {
+  id: number;
+}
+
 class ApiService {
   private async makeRequest<T>(
   endpoint: string,
@@ -219,14 +261,14 @@ class ApiService {
     });
   }
 
-  async updateCategory(data: UpdateCategoryRequest): Promise<CategoryResponse> {
-    console.log('Updating category with data:', data);
-    const response = await this.makeRequest<CategoryResponse>('/category/createUpdateCategory', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-    return response;
-  }
+  // async updateCategory(data: UpdateCategoryRequest): Promise<CategoryResponse> {
+  //   console.log('Updating category with data:', data);
+  //   const response = await this.makeRequest<CategoryResponse>('/category/createUpdateCategory', {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //   });
+  //   return response;
+  // }
 
   async deleteCategory(data: DeleteCategoryRequest): Promise<{ success: boolean; message: string }> {
     return this.makeRequest<{ success: boolean; message: string }>('/category/softDeleteOrDetach', {
@@ -262,6 +304,41 @@ class ApiService {
     }
 
     return response.json();
+  }
+
+  // Item APIs
+  async getAllItems(): Promise<ItemsResponse> {
+    return this.makeRequest<ItemsResponse>('/item/getAllItems', {
+      method: 'GET',
+    });
+  }
+
+  async createUpdateItem(data: CreateUpdateItemRequest): Promise<ItemResponse> {
+    // console.log('Creating/Updating item with data:', data);
+    return this.makeRequest<ItemResponse>('/item/createUpdateItem', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateItem(data: UpdateItemRequest): Promise<ItemResponse> {
+    // console.log('Updating item with data:', data);
+    return this.makeRequest<ItemResponse>('/item/createUpdateItem', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteItem(itemId: number): Promise<{ success: boolean; message: string }> {
+    return this.makeRequest<{ success: boolean; message: string }>(`/item/deleteItem/${itemId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getItemById(id: number): Promise<ItemResponse> {
+    return this.makeRequest<ItemResponse>(`/item/getAllItems/${id}`, {
+      method: 'GET',
+    });
   }
 }
 
