@@ -145,6 +145,55 @@ export interface UpdateItemRequest extends CreateUpdateItemRequest {
   id: number;
 }
 
+export interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email_address: string;
+  phone_number: string;
+  street_address1: string;
+  street_address2?: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  role_name: string;
+  description?: string;
+  restaurant_name?: string;
+  agreement_docs?: string;
+  created_at?: string;
+  updated_at?: string;
+  is_active?: boolean;
+}
+
+export interface CreateUserRequest {
+  role_name: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  email_address: string;
+  street_address1: string;
+  street_address2?: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  description?: string;
+  restaurant_name?: string;
+  agreement_docs?: string;
+  password: string;
+}
+
+export interface UsersResponse {
+  errorCode: number;
+  errorMessage: string | null;
+  data: User[] | null;
+}
+
+export interface UserResponse {
+  errorCode: number;
+  errorMessage: string | null;
+  data: User | null;
+}
+
 class ApiService {
   private async makeRequest<T>(
   endpoint: string,
@@ -338,6 +387,33 @@ class ApiService {
   async getItemById(id: number): Promise<ItemResponse> {
     return this.makeRequest<ItemResponse>(`/item/getAllItems/${id}`, {
       method: 'GET',
+    });
+  }
+
+  // User APIs
+  async getUsers(): Promise<UsersResponse> {
+    return this.makeRequest<UsersResponse>('/auth/getUsers', {
+      method: 'GET',
+    });
+  }
+
+  async createUser(data: CreateUserRequest): Promise<UserResponse> {
+    return this.makeRequest<UserResponse>('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateUserStatus(userId: number, isActive: boolean): Promise<{ success: boolean; message: string }> {
+    return this.makeRequest<{ success: boolean; message: string }>(`/auth/updateUserStatus/${userId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ is_active: isActive }),
+    });
+  }
+
+  async deleteUser(userId: number): Promise<{ success: boolean; message: string }> {
+    return this.makeRequest<{ success: boolean; message: string }>(`/auth/deleteUser/${userId}`, {
+      method: 'DELETE',
     });
   }
 }
