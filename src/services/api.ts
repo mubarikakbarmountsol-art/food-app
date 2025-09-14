@@ -416,6 +416,45 @@ class ApiService {
       method: 'DELETE',
     });
   }
+  async requestOtp(data: { email: string }): Promise<{
+    errorCode: number;
+    errorMessage: string | null;
+    data?: {
+      message: string;
+      otp: string;
+      expiresAt: string;
+    };
+  }> 
+  
+  {
+    return this.makeRequest('/auth/request-otp', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async verifyOtp(data: { email: string; otp: string }): Promise<VerifyOtpResponse> {
+    return this.makeRequest<VerifyOtpResponse>("/auth/verify-otp", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  // services/api.ts
+  async resetPassword(data: { email: string; newPassword: string }): Promise<{
+    errorCode: number;
+    errorMessage: string | null;
+    data?: {
+      email: string;
+      message: string;
+    };
+  }> 
+  {
+    return this.makeRequest("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
 }
 
 export const apiService = new ApiService();
