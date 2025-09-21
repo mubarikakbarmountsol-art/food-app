@@ -84,7 +84,8 @@ export interface CreateUpdateCategoryRequest {
 }
 
 export interface DeleteCategoryRequest {
-  categoryId: number;
+  categoryId?: number;
+  subcategoryId?: number;
   parentCategoryId?: number;
 }
 
@@ -310,20 +311,21 @@ class ApiService {
     });
   }
 
-  // async updateCategory(data: UpdateCategoryRequest): Promise<CategoryResponse> {
-  //   console.log('Updating category with data:', data);
-  //   const response = await this.makeRequest<CategoryResponse>('/category/createUpdateCategory', {
-  //     method: 'POST',
-  //     body: JSON.stringify(data),
-  //   });
-  //   return response;
-  // }
+  async updateCategory(data: UpdateCategoryRequest): Promise<CategoryResponse> {
+    console.log('Updating category with data:', data);
+    return this.makeRequest<CategoryResponse>('/category/createUpdateCategory', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
 
   async deleteCategory(data: DeleteCategoryRequest): Promise<{ success: boolean; message: string }> {
-    return this.makeRequest<{ success: boolean; message: string }>('/category/softDeleteOrDetach', {
+    const response = await this.makeRequest<{ success: boolean; message: string }>('/category/softDeleteOrDetach', {
       method: 'DELETE',
       body: JSON.stringify(data),
     });
+    
+    return response;
   }
 
   async getCategoryById(id: number): Promise<CategoryResponse> {
@@ -416,6 +418,25 @@ class ApiService {
       method: 'DELETE',
     });
   }
+
+  // Vendor-specific APIs
+  async getVendors(): Promise<UsersResponse> {
+    return this.makeRequest<UsersResponse>('/auth/getUsers?role=vendor', {
+      method: 'GET',
+    });
+  }
+
+  async createVendor(data: CreateUserRequest): Promise<UserResponse> {
+    const vendorData = {
+      ...data,
+      role_name: 'Vendor'
+    };
+    return this.makeRequest<UserResponse>('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify(vendorData),
+    });
+  }
+
   async requestOtp(data: { email: string }): Promise<{
     errorCode: number;
     errorMessage: string | null;
