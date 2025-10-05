@@ -319,12 +319,23 @@ class ApiService {
   }
 
   async deleteCategory(data: DeleteCategoryRequest): Promise<{ success: boolean; message: string }> {
-    const response = await this.makeRequest<{ success: boolean; message: string }>('/category/softDeleteOrDetach', {
+    const response = await this.makeRequest<any>('/category/softDeleteOrDetach', {
       method: 'DELETE',
       body: JSON.stringify(data),
     });
-    
-    return response;
+
+    // Handle different response structures
+    if (response.errorCode === 0) {
+      return {
+        success: true,
+        message: response.errorMessage || response.message || 'Category deleted successfully'
+      };
+    }
+
+    return {
+      success: false,
+      message: response.errorMessage || response.message || 'Failed to delete category'
+    };
   }
 
   async getCategoryById(id: number): Promise<CategoryResponse> {
