@@ -84,8 +84,7 @@ export interface CreateUpdateCategoryRequest {
 }
 
 export interface DeleteCategoryRequest {
-  categoryId?: number;
-  subcategoryId?: number;
+  categoryId: number;
   parentCategoryId?: number;
 }
 
