@@ -413,6 +413,17 @@ class ApiService {
     });
   }
 
+  async updateUser(userId: number, data: Partial<CreateUserRequest>): Promise<UserResponse> {
+    const updateData = {
+      ...data,
+      id: userId
+    };
+    return this.makeRequest<UserResponse>('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify(updateData),
+    });
+  }
+
   async deleteUser(userId: number): Promise<{ success: boolean; message: string }> {
     return this.makeRequest<{ success: boolean; message: string }>(`/auth/deleteUser/${userId}`, {
       method: 'DELETE',
