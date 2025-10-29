@@ -111,6 +111,8 @@ export interface Item {
   backgroundImageUrl: string;
   coverImageUrl: string;
   categoryIds: number[];
+  quantity?: number;
+  price?: number;
   createdAt?: string;
   updatedAt?: string;
   vendorId?: number;
@@ -124,6 +126,8 @@ export interface CreateUpdateItemRequest {
   backgroundImageUrl: string;
   coverImageUrl: string;
   categoryIds: number[];
+  quantity?: number;
+  price?: number;
 }
 
 export interface ItemsResponse {
