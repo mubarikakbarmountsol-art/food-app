@@ -88,8 +88,8 @@ export default function ItemDetailPage() {
             : Array.isArray(item.categoryIds)
             ? item.categoryIds
             : [],
-          quantity: item.quantity || 0,
-          price: item.price || 0,
+          quantity: Number(item.quantity) || 0,
+          price: parseFloat(String(item.price)) || 0,
           createdAt: item.created_at || item.createdAt,
           updatedAt: item.updated_at || item.updatedAt,
           vendorId: item.vendor_id || item.vendorId,
