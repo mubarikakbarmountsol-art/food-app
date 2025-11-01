@@ -269,6 +269,7 @@ export default function ItemsPage() {
     setBackgroundImagePreview("");
     setImageUploadMethod("url");
     setBackgroundImageMethod("url");
+    setShowAddForm(false);
   };
 
   const handleFileSelect = (
@@ -396,7 +397,7 @@ export default function ItemsPage() {
     }
   };
 
-  const handleInputChange = (field: string, value: string | number[]) => {
+  const handleInputChange = (field: string, value: string | number | number[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
